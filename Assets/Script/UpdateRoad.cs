@@ -7,6 +7,7 @@ public class UpdateRoad : MonoBehaviour {
 
     public GameObject ball;
     public GameObject roadWithNoFloor;
+    public GameObject starter;
     public float roadLength = 10;
 
     public GameObject floorNormal;
@@ -70,5 +71,22 @@ public class UpdateRoad : MonoBehaviour {
                 
             }
         }
+    }
+
+    public void resetRoad()
+    {
+        //删除所有的路
+        GameObject[] roads = GameObject.FindGameObjectsWithTag("Road");
+        if (roads != null && roads.Length > 0)
+        {
+            foreach(GameObject road in roads)
+            {
+                Destroy(road);
+            }
+
+            roads = null;
+        }
+
+        Instantiate(starter);
     }
 }

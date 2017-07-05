@@ -24,7 +24,7 @@ public class GameInput : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
 #endif
 #if UNITY_ANDROID || UNITY_IOS
-        if(Input.touchCount>0&& Input.GetTouch(0).phase == TouchPhase.Canceled)
+        if(Input.touchCount>0&& Input.GetTouch(0).phase == TouchPhase.Ended)
 #endif
         {
             ball.SendMessage("userTap");

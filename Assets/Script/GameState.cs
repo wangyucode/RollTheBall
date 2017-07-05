@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class GameState : MonoBehaviour {
 
+    public GameObject ball;
+    public UpdateRoad updateRoad;
+
     public GameObject startView;
     public GameObject gameView;
     public GameObject pauseDialog;
@@ -66,5 +69,17 @@ public class GameState : MonoBehaviour {
         overDialog.SetActive(true);
     }
 
+
+    public void restart()
+    {
+        currentState = State.PLAY;
+
+        dialogBackground.gameObject.SetActive(false);
+        overDialog.SetActive(false);
+        gameView.SetActive(true);
+
+        ball.transform.position = new Vector3(0, 1, 0);
+        updateRoad.resetRoad();
+    }
 
 }
