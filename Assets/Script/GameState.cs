@@ -15,6 +15,8 @@ public class GameState : MonoBehaviour {
 
     public Image dialogBackground;
 
+    public Text overScoreText;
+
     public enum State
     {
         START,
@@ -34,8 +36,11 @@ public class GameState : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-	}
+        if (currentState == State.PLAY && ball.transform.position.y < -10)
+        {
+            gameover();
+        }
+    }
 
     public void changeState(State state)
     {
@@ -46,6 +51,7 @@ public class GameState : MonoBehaviour {
     {
         currentState = State.PLAY;
 
+        dialogBackground.gameObject.SetActive(false);
         startView.SetActive(false);
         gameView.SetActive(true);
     }
@@ -69,6 +75,8 @@ public class GameState : MonoBehaviour {
         gameView.SetActive(false);
         dialogBackground.gameObject.SetActive(true);
         overDialog.SetActive(true);
+
+        overScoreText.text = string.Format("{0:N1}m", UpdateScore.score);
     }
 
 

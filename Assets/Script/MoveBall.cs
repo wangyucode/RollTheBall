@@ -21,10 +21,7 @@ public class MoveBall : MonoBehaviour {
         //transform.localPosition += new Vector3(0, 0, Time.deltaTime* speedZ);
         //if(rb.velocity.y)
 
-        if (GameState.currentState == GameState.State.PLAY && transform.position.y < -10)
-        {
-            gameManager.SendMessage("gameover");
-        }
+        
         
     }
 
