@@ -58,6 +58,8 @@ public class GameState : MonoBehaviour {
         gameView.SetActive(false);
         dialogBackground.gameObject.SetActive(true);
         pauseDialog.SetActive(true);
+
+        Time.timeScale = 0;
     }
 
     public void gameover()
@@ -82,4 +84,28 @@ public class GameState : MonoBehaviour {
         updateRoad.resetRoad();
     }
 
+    public void continuePlay()
+    {
+        currentState = State.PLAY;
+
+        gameView.SetActive(true);
+        dialogBackground.gameObject.SetActive(false);
+        pauseDialog.SetActive(false);
+
+        Time.timeScale = 1;
+    }
+
+
+    public void backToMain()
+    {
+        currentState = State.START;
+
+        startView.SetActive(true);
+        dialogBackground.gameObject.SetActive(false);
+        overDialog.SetActive(false);
+        pauseDialog.SetActive(false);
+
+        ball.transform.position = new Vector3(0, 1, 0);
+        updateRoad.resetRoad();
+    }
 }
