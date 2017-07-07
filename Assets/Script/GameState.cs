@@ -12,6 +12,7 @@ public class GameState : MonoBehaviour {
     public GameObject gameView;
     public GameObject pauseDialog;
     public GameObject overDialog;
+    public GameObject scoreView;
 
     public Image dialogBackground;
 
@@ -109,11 +110,19 @@ public class GameState : MonoBehaviour {
         currentState = State.START;
 
         startView.SetActive(true);
-        dialogBackground.gameObject.SetActive(false);
+        dialogBackground.gameObject.SetActive(true);
         overDialog.SetActive(false);
         pauseDialog.SetActive(false);
+        scoreView.SetActive(false);
 
         ball.transform.position = new Vector3(0, 1, 0);
         updateRoad.resetRoad();
+    }
+
+
+    public void showScore()
+    {
+        startView.SetActive(false);
+        scoreView.SetActive(true);
     }
 }
