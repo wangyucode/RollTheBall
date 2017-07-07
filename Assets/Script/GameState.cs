@@ -117,6 +117,8 @@ public class GameState : MonoBehaviour {
 
         ball.transform.position = new Vector3(0, 1, 0);
         updateRoad.resetRoad();
+
+        Time.timeScale = 1;
     }
 
 
