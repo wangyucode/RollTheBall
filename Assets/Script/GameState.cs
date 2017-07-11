@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class GameState : MonoBehaviour {
@@ -126,5 +128,25 @@ public class GameState : MonoBehaviour {
     {
         startView.SetActive(false);
         scoreView.SetActive(true);
+
+        StartCoroutine(getTop10Score());
+    }
+
+    private IEnumerator getTop10Score()
+    {
+        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
+        formData.Add(new MultipartFormDataSection("gameId=1"));
+
+        UnityWebRequest www = UnityWebRequest.Post("http://wycode.cn/api/score/getTopScores", formData);
+        yield return www.Send();
+
+        if (www.isError)
+        {
+            Debug.Log(www.error);
+        }
+        else
+        {
+            Debug.Log("Form upload complete!");
+        }
     }
 }
