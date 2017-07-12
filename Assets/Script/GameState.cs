@@ -134,19 +134,50 @@ public class GameState : MonoBehaviour {
 
     private IEnumerator getTop10Score()
     {
-        List<IMultipartFormSection> formData = new List<IMultipartFormSection>();
-        formData.Add(new MultipartFormDataSection("gameId=1"));
+        WWWForm form = new WWWForm();
+        form.AddField("gameId", "1");
 
-        UnityWebRequest www = UnityWebRequest.Post("http://wycode.cn/api/score/getTopScores", formData);
-        yield return www.Send();
-
-        if (www.isError)
+        using (UnityWebRequest www = UnityWebRequest.Post("http://wycode.cn/api/score/getTopScores", form))
         {
-            Debug.Log(www.error);
+            yield return www.Send();
+
+            if (www.isError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.downloadHandler.text);
+                if (www.responseCode == 200) {
+
+                    resolveGlobalData(www.downloadHandler.text);
+                    
+                }
+                
+            }
         }
-        else
+    }
+
+    private void resolveGlobalData(string text)
+    {
+        WyResultGameScore result = JsonUtility.FromJson<WyResultGameScore>(text);
+        if (result.code == 1)
         {
-            Debug.Log("Form upload complete!");
+            GameObject[] cells = GameObject.FindGameObjectsWithTag("GameScoreCell");
+            for(int i = 0; i < result.data.Count; i++)
+            {
+                GameObject cell = cells[i];
+                GameScore gameScore = result.data[i];
+
+                Text[] texts = cell.GetComponentsInChildren<Text>();
+
+                texts[0].text = (i + 1).ToString();
+                texts[1].text = gameScore.score+"m";
+                texts[2].text = gameScore.name;
+            }
+        }else
+        {
+            Debug.Log(result.message);
         }
     }
 }
