@@ -19,6 +19,13 @@ public class GameState : MonoBehaviour {
     public Image dialogBackground;
 
     public Text overScoreText;
+    public Text overRankingText;
+
+    public Text myNameText;
+    public Text myScoreText;
+    public Text myRankingText;
+    
+
 
     public enum State
     {
@@ -79,9 +86,40 @@ public class GameState : MonoBehaviour {
         dialogBackground.gameObject.SetActive(true);
         overDialog.SetActive(true);
 
-        overScoreText.text = string.Format("{0:N1}m", UpdateScore.score);
+        overScoreText.text = string.Format("{0:N0}m", UpdateScore.score);
+
+        if (UpdateScore.setMyScore())
+        {
+            StartCoroutine(uploadScore((int)UpdateScore.score));
+        }
+
+        StartCoroutine(getMyRank((int)UpdateScore.score, overRankingText));
     }
 
+    private IEnumerator uploadScore(int score)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("gameId", "1");
+        form.AddField("score", score);
+        form.AddField("userId", UserManager.guestGUID);
+        form.AddField("platform", Application.platform.ToString());
+        form.AddField("name", "游客"+UserManager.guestNumber);
+        form.AddField("secret", "wycode.cn");
+        
+        using (UnityWebRequest www = UnityWebRequest.Post("http://wycode.cn/api/score/saveMyScore", form))
+        {
+            yield return www.Send();
+
+            if (www.isError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.downloadHandler.text);
+            }
+        }
+    }
 
     public void restart()
     {
@@ -129,7 +167,51 @@ public class GameState : MonoBehaviour {
         startView.SetActive(false);
         scoreView.SetActive(true);
 
+        setMyInfo();
         StartCoroutine(getTop10Score());
+    }
+
+    private void setMyInfo()
+    {
+        myNameText.text = "游客" + UserManager.guestNumber;
+        int myScore = UpdateScore.getMyScore();
+        myScoreText.text = myScore + "m";
+        StartCoroutine(getMyRank(myScore,myRankingText));
+    }
+    
+    private IEnumerator getMyRank(int myScore,Text textView)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("gameId", "1");
+        form.AddField("score", myScore);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("http://wycode.cn/api/score/getMyRanking", form))
+        {
+            yield return www.Send();
+
+            if (www.isError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.downloadHandler.text);
+                if (www.responseCode == 200)
+                {
+
+                    resolveRankingData(www.downloadHandler.text, textView);
+
+                }
+
+            }
+        }
+    }
+
+    private void resolveRankingData(string text, Text textView)
+    {
+        WyResultRanking result = JsonUtility.FromJson<WyResultRanking>(text);
+        textView.text = "全球排名第" + result.data;
+
     }
 
     private IEnumerator getTop10Score()
