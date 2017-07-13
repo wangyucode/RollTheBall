@@ -93,7 +93,7 @@ public class GameState : MonoBehaviour {
             StartCoroutine(uploadScore((int)UpdateScore.score));
         }
 
-        StartCoroutine(getMyRank((int)UpdateScore.score, overRankingText));
+        StartCoroutine(getMyRank(UpdateScore.getMyScore(), overRankingText));
     }
 
     private IEnumerator uploadScore(int score)
@@ -129,7 +129,7 @@ public class GameState : MonoBehaviour {
         overDialog.SetActive(false);
         gameView.SetActive(true);
 
-        ball.transform.position = new Vector3(0, 1, 0);
+        ball.GetComponent<MoveBall>().resetBall();
         updateRoad.resetRoad();
     }
 
@@ -155,7 +155,7 @@ public class GameState : MonoBehaviour {
         pauseDialog.SetActive(false);
         scoreView.SetActive(false);
 
-        ball.transform.position = new Vector3(0, 1, 0);
+        ball.GetComponent<MoveBall>().resetBall();
         updateRoad.resetRoad();
 
         Time.timeScale = 1;

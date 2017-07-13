@@ -11,8 +11,15 @@ public class UpdateRoad : MonoBehaviour {
     public float roadLength = 10;
 
     public GameObject floorNormal;
-	// Use this for initialization
-	void Start () {
+    public GameObject floorMetal;
+    public GameObject floorWood;
+
+    public int probMetal = 1;
+    public int probWood = 1;
+    public int probNull = 5;
+    
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
@@ -54,11 +61,18 @@ public class UpdateRoad : MonoBehaviour {
             for(int j = 0; j < 10; j++)
             {
                 GameObject floorOne = null;
-                float random = UnityEngine.Random.Range(0,100);
-                if (random <10)
+                int random = UnityEngine.Random.Range(0,100);
+                if (random <probMetal)
+                {
+                    floorOne = Instantiate(floorMetal);
+                }else if(random<(probMetal+probWood))
+                {
+                    floorOne = Instantiate(floorWood);
+                }else if (random < (probMetal+probWood+probNull))
                 {
 
-                }else
+                }
+                else
                 {
                     floorOne = Instantiate(floorNormal);
                 }
