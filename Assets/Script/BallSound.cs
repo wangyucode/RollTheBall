@@ -7,6 +7,11 @@ public class BallSound : MonoBehaviour {
     public AudioClip soundFall;
     public AudioClip soundWood;
     public AudioClip soundMetal;
+    public AudioClip soundLarger;
+    public AudioClip soundSmaller;
+    public AudioClip soundFaster;
+    public AudioClip soundSlower;
+
 
     private AudioSource source;
 
@@ -47,23 +52,23 @@ public class BallSound : MonoBehaviour {
         }
         else if (tag.Equals("FloorLarger"))
         {
-            source.clip = soundMetal;
+            source.clip = soundLarger;
             source.Play();
         }
         else if (tag.Equals("FloorSmaller"))
         {
-            source.clip = soundMetal;
+            source.clip = soundSmaller;
             source.Play();
         }
 
         else if (tag.Equals("FloorFaster"))
         {
-            source.clip = soundMetal;
+            source.clip = soundFaster;
             source.Play();
         }
         else if (tag.Equals("FloorSlower"))
         {
-            source.clip = soundMetal;
+            source.clip = soundSlower;
             source.Play();
         }
     }
