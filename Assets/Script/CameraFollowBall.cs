@@ -8,6 +8,8 @@ public class CameraFollowBall : MonoBehaviour {
 
     private Vector3 offset;
 
+    private Vector3 effect;
+
 	// Use this for initialization
 	void Start () {
         offset = transform.position - ball.transform.position;
@@ -24,5 +26,10 @@ public class CameraFollowBall : MonoBehaviour {
 
         transform.position = new Vector3(x, y, z);
        
+    }
+
+    void speedUp()
+    {
+        
     }
 }
