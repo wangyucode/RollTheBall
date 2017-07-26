@@ -103,7 +103,7 @@ public class GameState : MonoBehaviour {
         form.AddField("score", score);
         form.AddField("userId", UserManager.guestGUID);
         form.AddField("platform", Application.platform.ToString());
-        form.AddField("name", "游客"+UserManager.guestNumber);
+        form.AddField("name", UserManager.userName);
         form.AddField("secret", "wycode.cn");
         
         using (UnityWebRequest www = UnityWebRequest.Post("http://wycode.cn/api/score/saveMyScore", form))
@@ -173,7 +173,7 @@ public class GameState : MonoBehaviour {
 
     private void setMyInfo()
     {
-        myNameText.text = "游客" + UserManager.guestNumber;
+        myNameText.text = UserManager.userName;
         int myScore = UpdateScore.getMyScore();
         myScoreText.text = myScore + "m";
         StartCoroutine(getMyRank(myScore,myRankingText));
@@ -211,7 +211,8 @@ public class GameState : MonoBehaviour {
     {
         WyResultRanking result = JsonUtility.FromJson<WyResultRanking>(text);
         textView.text = "全球排名第" + result.data;
-
+        UpdateScore.setMyRank(result.data);
+        
     }
 
     private IEnumerator getTop10Score()

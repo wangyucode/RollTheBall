@@ -6,34 +6,34 @@ using UnityEngine.UI;
 
 public class UserManager : MonoBehaviour
 {
-    private string guestNumberKey = "guestUser";
+    private string guestNameKey = "guestNameKey";
     private string guestGUIDKey = "guestGUIDKey";
     [HideInInspector]
-    public static int guestNumber;
-    [HideInInspector]
     public static string guestGUID;
+    [HideInInspector]
+    public static string userName;
 
-    public Text userName;
+    public Text userNameText;
 
     // Use this for initialization
     void Start()
     {
-        if (PlayerPrefs.HasKey(guestNumberKey) && PlayerPrefs.HasKey(guestGUIDKey))
+        if (PlayerPrefs.HasKey(guestNameKey) && PlayerPrefs.HasKey(guestGUIDKey))
         {
-            guestNumber = PlayerPrefs.GetInt(guestNumberKey);
+            userName = PlayerPrefs.GetString(guestNameKey);
             guestGUID = PlayerPrefs.GetString(guestGUIDKey);
         }
         else
         {
-            guestNumber = UnityEngine.Random.Range(15000, 99999);
+            userName = "游客"+UnityEngine.Random.Range(15000, 99999);
             guestGUID = Guid.NewGuid().ToString();
 
-            PlayerPrefs.SetInt(guestNumberKey, guestNumber);
+            PlayerPrefs.SetString(guestNameKey, userName);
             PlayerPrefs.SetString(guestGUIDKey, guestGUID);
             PlayerPrefs.Save();
         }
 
-        userName.text = "欢迎回来：游客" + guestNumber;
+        userNameText.text = "欢迎回来：" + userName;
     }
 
     // Update is called once per frame
@@ -41,4 +41,6 @@ public class UserManager : MonoBehaviour
     {
 
     }
+
+    
 }

@@ -15,6 +15,7 @@ public class UpdateScore : MonoBehaviour
     public static float score;
 
     private static string myScoreKey = "myScoreKey";
+    private static string myRankKey = "myRankKey";
 
     // Use this for initialization
     void Start()
@@ -50,4 +51,26 @@ public class UpdateScore : MonoBehaviour
     {
         return PlayerPrefs.GetInt(myScoreKey, 0);
     }
+
+    public static bool setMyRank(int rank)
+    {
+        if (rank > PlayerPrefs.GetInt(myRankKey, 0))
+        {
+            PlayerPrefs.SetInt(myRankKey, rank);
+            PlayerPrefs.Save();
+
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+
+    public static int getMyRank()
+    {
+        return PlayerPrefs.GetInt(myRankKey, 0);
+    }
+
 }
