@@ -54,7 +54,7 @@ public class UpdateScore : MonoBehaviour
 
     public static bool setMyRank(int rank)
     {
-        if (rank > PlayerPrefs.GetInt(myRankKey, 0))
+        if (rank < PlayerPrefs.GetInt(myRankKey, 0))
         {
             PlayerPrefs.SetInt(myRankKey, rank);
             PlayerPrefs.Save();
