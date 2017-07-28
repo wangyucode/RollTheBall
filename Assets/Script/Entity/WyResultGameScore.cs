@@ -19,4 +19,5 @@ public class GameScore
     public string platform;//(string, optional): 游戏平台 ,
     public int score;//(integer, optional): 分数 ,
     public string userId;//(string, optional): userId
+    public int rank;
 }

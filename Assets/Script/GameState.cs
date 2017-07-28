@@ -15,6 +15,7 @@ public class GameState : MonoBehaviour {
     public GameObject pauseDialog;
     public GameObject overDialog;
     public GameObject scoreView;
+    public GameObject editNameDialog;
 
     public Image dialogBackground;
 
@@ -24,7 +25,12 @@ public class GameState : MonoBehaviour {
     public Text myNameText;
     public Text myScoreText;
     public Text myRankingText;
-    
+
+    public InputField nameInput;
+    public Text editNameTitle;
+    public Text editNamePlaceholder;
+
+    public Text userNameWelcome;
 
 
     public enum State
@@ -88,7 +94,7 @@ public class GameState : MonoBehaviour {
 
         overScoreText.text = string.Format("{0:N0}m", UpdateScore.score);
 
-        if (UpdateScore.setMyScore())
+        if (UpdateScore.setMyScore((int)UpdateScore.score))
         {
             StartCoroutine(uploadScore((int)UpdateScore.score));
         }
@@ -171,14 +177,113 @@ public class GameState : MonoBehaviour {
         StartCoroutine(getTop10Score());
     }
 
+    public void showEditName()
+    {
+        editNamePlaceholder.text = UserManager.userName;
+        nameInput.text = "";
+        editNameDialog.SetActive(true);
+    }
+
+    public void hideEditName()
+    {
+        editNameDialog.SetActive(false);
+    }
+
+    public void checkName()
+    {
+        if(String.IsNullOrEmpty(nameInput.text))
+        {
+            editNameTitle.text = "昵称不能为空";
+        }else
+        {
+            StartCoroutine(uploadName(nameInput.text));
+        }
+    }
+
+    private IEnumerator uploadName(string name)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("gameId", "1");
+        form.AddField("userId", UserManager.guestGUID);
+        form.AddField("name", name);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("http://wycode.cn/api/score/changeName", form))
+        {
+            yield return www.Send();
+
+            if (www.isError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.downloadHandler.text);
+                if (www.responseCode == 200)
+                {
+                    WyResultName result = JsonUtility.FromJson<WyResultName>(www.downloadHandler.text);
+                    if (result.code == 1)
+                    {
+                        UserManager.saveName(name);
+                        hideEditName();
+                        userNameWelcome.text = "欢迎回来：" + name;
+                    }else
+                    {
+                        editNameTitle.text = result.message;
+                    }
+                    
+
+                }
+
+            }
+        }
+    }
+
     private void setMyInfo()
     {
         myNameText.text = UserManager.userName;
         int myScore = UpdateScore.getMyScore();
         myScoreText.text = myScore + "m";
-        StartCoroutine(getMyRank(myScore,myRankingText));
+        int myRank = UpdateScore.getMyRank();
+        myRankingText.text = "全球排名第" + myRank;
+        StartCoroutine(getMyScoreAndRank());
     }
-    
+
+    private IEnumerator getMyScoreAndRank()
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("gameId", "1");
+        form.AddField("userId", UserManager.guestGUID);
+
+        using (UnityWebRequest www = UnityWebRequest.Post("http://wycode.cn/api/score/getScoreAndRanking", form))
+        {
+            yield return www.Send();
+
+            if (www.isError)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log(www.downloadHandler.text);
+                if (www.responseCode == 200)
+                {
+                    WyResultName result = JsonUtility.FromJson<WyResultName>(www.downloadHandler.text);
+                    if (result.code == 1)
+                    {
+                        myScoreText.text = result.data.score + "m";
+                        myRankingText.text = "全球排名第" + result.data.rank;
+
+                        UpdateScore.setMyScore(result.data.score);
+                        UpdateScore.setMyRank(result.data.rank);
+                    }
+
+                }
+
+            }
+        }
+    }
+
+
     private IEnumerator getMyRank(int myScore,Text textView)
     {
         WWWForm form = new WWWForm();

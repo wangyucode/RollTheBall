@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class UserManager : MonoBehaviour
 {
-    private string guestNameKey = "guestNameKey";
-    private string guestGUIDKey = "guestGUIDKey";
+    private static string guestNameKey = "guestNameKey";
+    private static string guestGUIDKey = "guestGUIDKey";
     [HideInInspector]
     public static string guestGUID;
     [HideInInspector]
@@ -42,5 +42,10 @@ public class UserManager : MonoBehaviour
 
     }
 
-    
+    internal static void saveName(string name)
+    {
+        PlayerPrefs.SetString(guestNameKey, name);
+        PlayerPrefs.Save();
+        userName = name;
+    }
 }

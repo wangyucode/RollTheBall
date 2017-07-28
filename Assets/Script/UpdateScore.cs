@@ -32,11 +32,11 @@ public class UpdateScore : MonoBehaviour
 
     }
 
-    public static bool setMyScore()
+    public static bool setMyScore(int score)
     {
         if(score > PlayerPrefs.GetInt(myScoreKey, 0))
         {
-            PlayerPrefs.SetInt(myScoreKey, (int)score);
+            PlayerPrefs.SetInt(myScoreKey, score);
             PlayerPrefs.Save();
 
             return true;
