@@ -91,6 +91,7 @@ public class MoveBall : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        other.gameObject.SetActive(false);
         Debug.Log(other.gameObject.tag);
         string tag = other.gameObject.tag;
         if (tag.Equals("FloorMetal"))
@@ -98,35 +99,34 @@ public class MoveBall : MonoBehaviour
             render.material = mMetal;
             rb.mass = 20;
             powerZ = 2;
-            other.gameObject.SetActive(false);
+            
         }
         else if (tag.Equals("FloorWood"))
         {
             render.material = mWood;
             rb.mass = 5;
             powerZ = 1;
-            other.gameObject.SetActive(false);
         }
         else if (tag.Equals("FloorLarger"))
         {
             transform.localScale = transform.localScale + Vector3.one * 0.1f;
-            other.gameObject.SetActive(false);
+            Camera.main.SendMessage("larger");
         }
         else if (tag.Equals("FloorSmaller"))
         {
             transform.localScale = transform.localScale - Vector3.one * 0.1f;
-            other.gameObject.SetActive(false);
+            Camera.main.SendMessage("smaller");
         }
 
         else if (tag.Equals("FloorFaster"))
         {
-            speedZ += 10;
-            other.gameObject.SetActive(false);
+            speedZ += 8;
+            Camera.main.SendMessage("faster");
         }
         else if (tag.Equals("FloorSlower"))
         {
-            speedZ -= 10;
-            other.gameObject.SetActive(false);
+            speedZ -= 8;
+            Camera.main.SendMessage("slower");
         }
     }
 

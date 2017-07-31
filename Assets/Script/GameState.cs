@@ -137,6 +137,7 @@ public class GameState : MonoBehaviour {
 
         ball.GetComponent<MoveBall>().resetBall();
         updateRoad.resetRoad();
+        Camera.main.GetComponent<CameraFollowBall>().resetCamera();
     }
 
     public void continuePlay()
@@ -163,6 +164,7 @@ public class GameState : MonoBehaviour {
 
         ball.GetComponent<MoveBall>().resetBall();
         updateRoad.resetRoad();
+        Camera.main.GetComponent<CameraFollowBall>().resetCamera();
 
         Time.timeScale = 1;
     }

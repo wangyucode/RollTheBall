@@ -2,34 +2,61 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraFollowBall : MonoBehaviour {
+public class CameraFollowBall : MonoBehaviour
+{
 
     public GameObject ball;
 
+    public float effectStep = 0.4f;
+
     private Vector3 offset;
 
-    private Vector3 effect;
+    private Vector3 effectTarget;
 
-	// Use this for initialization
-	void Start () {
-        offset = transform.position - ball.transform.position;
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    private Vector3 effectCurrent;
 
-        float x = 0;
-
-        float y = ball.transform.position.y + offset.y;
-
-        float z = ball.transform.position.z + offset.z;
-
-        transform.position = new Vector3(x, y, z);
-       
-    }
-
-    void speedUp()
+    private Vector3 velocity;
+    // Use this for initialization
+    void Start()
     {
-        
+        offset = transform.position - ball.transform.position;
     }
+
+    // Update is called once per frame
+    void Update()
+    {
+        effectCurrent = Vector3.SmoothDamp(effectCurrent, effectTarget, ref velocity, 0.2f);
+
+        transform.position = ball.transform.position + offset + effectCurrent;
+
+        transform.LookAt(ball.transform);
+
+    }
+
+    public void resetCamera()
+    {
+        effectTarget = Vector3.zero;
+    }
+
+    void larger()
+    {
+        effectTarget.y += effectStep;
+    }
+
+    void smaller()
+    {
+        effectTarget.y -= effectStep;
+    }
+
+
+    void faster()
+    {
+        effectTarget.z -= effectStep;
+    }
+
+    void slower()
+    {
+        effectTarget.z += effectStep;
+    }
+
 }
